@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2020, Andreas Calminder
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from ansible.module_utils.basic import AnsibleModule
 import copy
@@ -10,7 +13,7 @@ import time
 
 ANSIBLE_METADATA = {
     'metadata_version': '0.1',
-    'status': ['alpha'],
+    'status': ['preview'],
     'supported_by': 'none'
 }
 DOCUMENTATION = '''
@@ -47,7 +50,7 @@ options:
   size:
     description:
       - volume size with suffix, for example C(300gib)
-      - suffixes can be any of following units: b, kb, mb, gb, tb, kib, mib, gib, tib
+      - suffixes can be any of following units b, kb, mb, gb, tb, kib, mib, gib, tib
       - maximum volume size is 128tib
     required: True
     type: str
@@ -105,7 +108,7 @@ options:
     description:
       - size of the snap pool to create in the disk group
       - used for volumes in linear storage type pools
-      - size suffixes can be any of following units: b, kb, mb, gb, tb, kib, mib, gib, tib
+      - size suffixes can be any of following units b, kb, mb, gb, tb, kib, mib, gib, tib
     type: str
   state:
     choices:

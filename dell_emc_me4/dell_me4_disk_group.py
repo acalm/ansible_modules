@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2020, Andreas Calminder
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from ansible.module_utils.basic import AnsibleModule
 import copy
@@ -8,7 +11,7 @@ import requests
 
 ANSIBLE_METADATA = {
     'metadata_version': '0.1',
-    'status': ['alpha'],
+    'status': ['preview'],
     'supported_by': 'none'
 }
 DOCUMENTATION = '''
@@ -53,7 +56,7 @@ options:
       - adapt
     description:
       - raid level
-      - raid types: C(nraid), C(r0), C(r3), C(r50) linear type only
+      - raid types C(nraid), C(r0), C(r3), C(r50) linear type only
     type: str
   mode:
     choices:

@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2020, Andreas Calminder
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from ansible.module_utils.basic import AnsibleModule
 import copy
@@ -8,7 +11,7 @@ import requests
 
 ANSIBLE_METADATA = {
     'metadata_version': '0.1',
-    'status': ['alpha'],
+    'status': ['preview'],
     'supported_by': 'none'
 }
 DOCUMENTATION = '''
@@ -34,7 +37,7 @@ options:
     description:
       - initiator nickname
       - cannot exceed 32 bytes
-      - cannot include any of " , . < \
+      - cannot include any of " , . < \\
     type: str
   profile:
     description:

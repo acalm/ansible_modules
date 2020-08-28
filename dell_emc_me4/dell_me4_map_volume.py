@@ -1,4 +1,7 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Copyright (C) 2020, Andreas Calminder
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from ansible.module_utils.basic import AnsibleModule
 import copy
@@ -9,7 +12,7 @@ import requests
 
 ANSIBLE_METADATA = {
     'metadata_version': '0.1',
-    'status': ['alpha'],
+    'status': ['preview'],
     'supported_by': 'none'
 }
 DOCUMENTATION = '''
@@ -45,7 +48,7 @@ options:
   ports:
     description:
       - controller ports to use
-      - ports must be of same type: fc, iscsi
+      - must be of same type (fc, iscsi)
     type: list
   access:
     choices:
@@ -66,7 +69,7 @@ options:
     description:
       - C(state=absent) remove volume mapping
       - C(state=present) create/update volume mapping
-      type: str
+    type: str
   hostname:
     required: True
     description:
