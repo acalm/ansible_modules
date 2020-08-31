@@ -239,7 +239,7 @@ def delete_volume(session_key, module):
 def suffixed_size_to_bytes(suffixed_size):
     suffix_map = {'b': 1, 'kb': 1000, 'kib': 1024, 'mb': 1000000, 'mib': 1048576, 'gb': 1000000000, 'gib': 1073741824, 'tb': 1000000000000, 'tib': 1099511627776}
     size_rx = re.compile('^([0-9]+)({0})$'.format('|'.join(suffix_map.keys())), re.I)
-    size_str, size_unit = size_rx.match(suffixed_size).groups()
+    size_str, size_unit = size_rx.match(suffixed_size.lower()).groups()
     return int(size_str) * suffix_map[size_unit]
 
 
@@ -253,7 +253,7 @@ def validate_params(module):
         module.fail_json(msg='volume name: {0} cannot be larger than 32 bytes'.format(module.params['name']))
 
     if not size_rx.match(module.params['size']):
-        module.fail_json('invalid format for size: {0}, sizes should be suffixed numbers'.format(module.params['size']))
+        module.fail_json(msg='invalid format for size: {0}, sizes should be properly suffixed integers'.format(module.params['size']))
     if suffixed_size_to_bytes(module.params['size']) > 140737488355328:
         module.fail_json(msg='volume size cannot exceed 140737488355328 bytes (128TiB)')
 
@@ -339,7 +339,7 @@ def update_volume(session_key, module):
     volume_size = volume['blocksize'] * volume['blocks']
     new_size = suffixed_size_to_bytes(module.params['size'])
     if new_size < volume_size:
-        module.fail_json(msg='size {0} is lower than current size, shrinking volumes is not supported'.format(module.params['size']))
+        module.fail_json(msg='size {0} ({1} bytes) is lower than current size, shrinking volumes is not supported'.format(module.params['size'], new_size))
 
     if new_size > volume_size:
         if new_size / volume['blocksize'] > pool['total-avail-numeric'] and pool['overcommit-numeric'] != 1:
