@@ -141,6 +141,26 @@ options:
     type: bool
 '''
 
+EXAMPLES = '''
+- name: create volume(s)
+  dell_me4_volume:
+    hostname: me4.management.address.tld
+    username: manage
+    password: "!manage"
+    verify_cert: false
+    name: "{{ item['name'] }}"
+    size: "{{ item['size'] }}"
+    disk_group: "{{ item['disk_group'] }}"
+    access: no-access
+  loop:
+    - name: my-volume1
+      size: 1tb
+      disk_group: mydg1
+    - name: another-vol
+      size: 3tb
+      disk_group: another-dg
+'''
+
 
 def get_session_key(module):
     rv = False
