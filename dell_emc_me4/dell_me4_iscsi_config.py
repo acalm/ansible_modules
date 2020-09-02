@@ -29,12 +29,12 @@ author:
 notes:
   - Tested on Dell EMC ME4024
 options:
-  iscsi_chap:
+  chap:
     default: False
     description:
       - enable/disable chap (Challenge Handshake Authentication Protocol)
     type: bool
-  iscsi_ip_version:
+  ip_version:
     choices:
       - 4
       - 6
@@ -42,18 +42,18 @@ options:
     description:
       - whether to use ipv4 or ipv6 for addressing iscsi ports
     type: int
-  iscsi_isns:
+  isns:
     default: 0.0.0.0
     description:
       - ip address to isns (Internet Storage Name Service) server
       - setting this to anything else than the default (0.0.0.0) enables isns
     type: str
-  iscsi_isns_alt:
+  isns_alt:
     default: 0.0.0.0
     description:
       - ip address to alternate isns (Internet Storage Name Service) server
     type: str
-  iscsi_jumbo_frames:
+  jumbo_frames:
     default: False
     description:
       - enable or disable jumbo frames
@@ -129,33 +129,33 @@ def set_iscsi_parameters(module):
 
     if not all(
         [
-            current_params['chap-numeric'] == module.params['iscsi_chap'],
-            current_params['jumbo-frames-numeric'] == module.params['iscsi_jumbo_frames'],
-            current_params['isns-ip'] == module.params['iscsi_isns'],
-            current_params['isns-alt-ip'] == module.params['iscsi_isns_alt'],
-            current_params['iscsi-speed'] == module.params['iscsi_speed'],
-            current_params['iscsi-ip-version'] == module.params['iscsi_ip_version'],
+            current_params['chap-numeric'] == module.params['chap'],
+            current_params['jumbo-frames-numeric'] == module.params['jumbo_frames'],
+            current_params['isns-ip'] == module.params['isns'],
+            current_params['isns-alt-ip'] == module.params['isns_alt'],
+            current_params['iscsi-speed'] == module.params['speed'],
+            current_params['iscsi-ip-version'] == module.params['ip_version'],
         ]
     ):
         chap = 'disabled'
         jumbo_frames = 'disabled'
         isns = 'disabled'
 
-        if module.params['iscsi_chap']:
+        if module.params['chap']:
             chap = 'enabled'
-        if module.params['iscsi_jumbo_frames']:
+        if module.params['jumbo_frames']:
             jumbo_frames = 'enabled'
-        if module.params['iscsi_isns'] != '0.0.0.0':
+        if module.params['isns'] != '0.0.0.0':
             isns = 'enabled'
 
         cmd = os.path.join(
             'chap', chap,
             'jumbo-frame', jumbo_frames,
-            'speed', module.params['iscsi_speed'],
-            'iscsi-ip-version', 'ipv{0}'.format(module.params['iscsi_ip_version']),
+            'speed', module.params['speed'],
+            'iscsi-ip-version', 'ipv{0}'.format(module.params['ip_version']),
             'isns', isns,
-            'isns-ip', module.params['iscsi_isns'],
-            'isns-alt-ip', module.params['iscsi_isns_alt']
+            'isns-ip', module.params['isns'],
+            'isns-alt-ip', module.params['isns_alt']
 
         )
         diff['before'] = current_params
@@ -166,11 +166,11 @@ def set_iscsi_parameters(module):
                 {
                     'chap': chap.capitalize(),
                     'jumbo-frames': jumbo_frames.capitalize(),
-                    'iscsi-speed': module.params['iscsi_speed'],
-                    'iscsi-ip-version': module.params['iscsi_ip_version'],
+                    'iscsi-speed': module.params['speed'],
+                    'iscsi-ip-version': module.params['ip_version'],
                     'isns': isns.capitalize(),
-                    'isns-ip': module.params['iscsi_isns'],
-                    'isns-alt-ip': module.params['iscsi_isns_alt']
+                    'isns-ip': module.params['isns'],
+                    'isns-alt-ip': module.params['isns_alt']
 
                 }
             )
@@ -197,12 +197,12 @@ def main():
             verify_cert=dict(type='bool', default=True),
             username=dict(type='str', default='manage'),
             password=dict(type='str', required=True, no_log=True),
-            iscsi_jumbo_frames=dict(type='bool', default=False),
-            iscsi_chap=dict(type='bool', default=False),
-            iscsi_ip_version=dict(type='int', choices=[4, 6], default=4),
-            iscsi_speed=dict(type='str', choices=['1gbps', 'auto'], default='auto'),
-            iscsi_isns=dict(type='str', default='0.0.0.0'),
-            iscsi_isns_alt=dict(type='str', default='0.0.0.0'),
+            jumbo_frames=dict(type='bool', default=False),
+            chap=dict(type='bool', default=False),
+            ip_version=dict(type='int', choices=[4, 6], default=4),
+            speed=dict(type='str', choices=['1gbps', 'auto'], default='auto'),
+            isns=dict(type='str', default='0.0.0.0'),
+            isns_alt=dict(type='str', default='0.0.0.0'),
 
         ),
         supports_check_mode=True
