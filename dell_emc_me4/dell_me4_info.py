@@ -88,6 +88,13 @@ def get_iscsi_parameters(session_key, module):
     return ret.get('iscsi-parameters', [])
 
 
+def get_initiators(session_key, module):
+    url = 'https://{0}/api/show/initiators'.format(module.params['hostname'])
+    headers = {'sessionKey': session_key}
+    ret = make_request(url, headers, module)
+    return ret.get('initiator', [])
+
+
 def get_controllers(session_key, module):
     url = 'https://{0}/api/show/controllers'.format(module.params['hostname'])
     headers = {'sessionKey': session_key}
@@ -168,7 +175,7 @@ def add_me4_info(me4_dict):
 
 
 def gen_me4_info(module):
-    rv = {'disks': [], 'system': {}, 'volumes': [], 'ports': [], 'disk_groups': [], 'pools': [], 'iscsi_parameters': {}, 'users': [], 'host_groups': []}
+    rv = {'disks': [], 'system': {}, 'volumes': [], 'ports': [], 'disk_groups': [], 'pools': [], 'iscsi_parameters': {}, 'users': [], 'host_groups': [], 'initiators': []}
     session_key = get_session_key(module)
     disks = get_disks(session_key, module)
     system = get_system(session_key, module)
@@ -182,6 +189,7 @@ def gen_me4_info(module):
     rv['iscsi_parameters'] = mangle_me4_dict(get_iscsi_parameters(session_key, module)[0])
     rv['host_groups'] = [mangle_me4_dict(group) for group in host_groups]
     rv['users'] = [mangle_me4_dict(user) for user in get_users(session_key, module)]
+    rv['initiators'] = [mangle_me4_dict(initiator) for initiator in get_initiators(session_key, module)]
 
     for disk in disks:
         disk_mangled = mangle_me4_dict(disk)
@@ -191,6 +199,7 @@ def gen_me4_info(module):
 
     for volume in volumes:
         volume_mangled = mangle_me4_dict(volume)
+        volume_mangled['name'] = volume['volume-name']
         volume_mangled.update(add_me4_info(volume))
         rv['volumes'].append(volume_mangled)
 
