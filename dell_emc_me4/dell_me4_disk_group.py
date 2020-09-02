@@ -56,7 +56,7 @@ options:
       - adapt
     description:
       - raid level
-      - raid types C(nraid), C(r0), C(r3), C(r50) linear type only
+      - linear only raid types C(nraid), C(r0), C(r3), C(r50)
     type: str
   mode:
     choices:
