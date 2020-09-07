@@ -28,6 +28,7 @@ author:
   - Andreas Calminder (@acalm)
 notes:
   - Tested on Dell EMC ME4024 iscsi
+  - fc port configuration isn't implemented yet, due to lack of testing
 options:
   fc_mode:
     choices:
@@ -46,6 +47,8 @@ options:
       - loop ID values to request for host ports when controllers arbitrate during a LIP
     type: list
   port:
+    aliases:
+      - name
     description:
       - port name, for example C(a0)
     required: True
@@ -108,6 +111,37 @@ options:
     description:
       - verify certificate(s) when connecting to san management
     type: bool
+'''
+
+
+EXAMPLES = '''
+- name: configure me4 iscsi ports
+  connection: local
+  dell_me4_ports:
+    hostname: "{{ inventory_hostname }}"
+    username: manage
+    password: !manage
+    verify_cert: true
+    port: "{{ item.port }}"
+    ip_address: "{{ item.ip_address }}"
+    mode: iscsi
+  loop:
+    - port: a0
+      ip_address: 10.31.11.8
+    - port: a1
+      ip_address: 10.31.10.8
+    - port: a2
+      ip_address: 10.31.11.5
+    - port: a3
+      ip_address: 10.31.10.5
+    - port: b0
+      ip_address: 10.31.10.6
+    - port: b1
+      ip_address: 10.31.11.6
+    - port: b2
+      ip_address: 10.31.10.7
+    - port: b3
+      ip_address: 10.31.11.7
 '''
 
 
@@ -239,15 +273,20 @@ def configure_iscsi_port(module):
 
 
 def configure_fc_port(module):
-    module.fail_json(msg='not implemented yet')
+    module.fail_json(msg='fc is not implemented yet, sorry')
+    base_url = 'https://{0}/api/set/host-parameters/'.format(module.params['hostname'])
     changed = False
     diff = {'before': {}, 'after': {}}
     msg = 'no change'
     loop_ids = []
     port_name = module.params['port'].lower()
+    fc_mode = module.params['fc_mode'].lower()
 
-    if module.params['fc_mode'] == 'loop' and module.params['fc_speed'] == '16g':
-        module.fail_json(msg='cannot use loop with 16g speed ')
+    if fc_mode == 'point-to-point':
+        fc_mode = 'ptp'
+
+    if module.params['fc_mode'] == 'loop' and module.params['fc_speed'] == '16gb':
+        module.fail_json(msg='cannot use loop with 16gb speed ')
 
     if module.params['fc_loop_ids']:
         loop_ids = sorted(module.params['fc_loop_ids'])
@@ -256,8 +295,16 @@ def configure_fc_port(module):
     ports = get_ports(session_key, module)
 
     for port in ports:
+        if port.get('port-type').lower() != module.params['mode']:
+            module.exit_json(msg='incorrect port type {0} for port {1}'.format(port.get('port-type').lower(), module.params['port']))
+        fc_port = port.get('fc-port', [])[0]
+
         if port.get('port').lower() == port_name:
-            cmd = ''
+            if not all(
+                fc_port['configured-speed'].lower() == module.params['fc_speed'].lower(),
+                fc_port['configured-topology'].lower() == fc_mode
+            ) or loop_ids:
+                pass
 
 
 def main():
@@ -269,12 +316,12 @@ def main():
             password=dict(type='str', required=True, no_log=True),
             fc_mode=dict(type='str', choices=['loop', 'point-to-point', 'auto'], default='point-to-point'),
             fc_loop_ids=dict(type='list'),
-            port=dict(type='str', required=True),
+            port=dict(type='str', required=True, aliases=['name']),
             ip_address=dict(type='str'),
             netmask=dict(type='str', default='255.255.255.0'),
             gateway=dict(type='str', default='0.0.0.0'),
             mode=dict(type='str', choices=['fc', 'iscsi'], default='iscsi'),
-            fc_speed=dict(type='str', choices=['4g', '8g', '16g', 'auto'], default='auto'),
+            fc_speed=dict(type='str', choices=['4gb', '8gb', '16gb', 'auto'], default='auto'),
             default_router=dict(type='str')
         ),
         supports_check_mode=True
