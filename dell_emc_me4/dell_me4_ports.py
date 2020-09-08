@@ -208,9 +208,9 @@ def configure_iscsi_port(module):
                 cmd = ''
                 if not all(
                     [
-                        module.params['ip_address'] == port.get('ip-address'),
-                        module.params['gateway'] == port.get('gateway'),
-                        module.params['netmask'] == port.get('netmask'),
+                        module.params['ip_address'] == current_config['ip-address'],
+                        module.params['gateway'] == current_config['gateway'],
+                        module.params['netmask'] == current_config['netmask'],
                     ]
                 ):
                     cmd = os.path.join(cmd, 'ip', module.params['ip_address'], 'netmask', module.params['netmask'], 'gateway', module.params['gateway'], 'iscsi-ip-version', ip_version, 'ports', module.params['port'])
