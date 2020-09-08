@@ -307,7 +307,7 @@ def create_disk_group(session_key, module):
 
     cmd = os.path.join(cmd, module.params['name'])
     url = os.path.join(base_url, cmd)
-    if module.change_mode:
+    if module.check_mode:
         rv['changed'] = True
         rv['msg'] = 'disk group created (check-mode)'
         rv['disk_group'] = {
