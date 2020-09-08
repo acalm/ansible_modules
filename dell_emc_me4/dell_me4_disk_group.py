@@ -33,7 +33,9 @@ options:
     description:
       - list of member disks
       - location format C(ENCLOSURE.DISK_NUMBER) for example C("0.3")
-      - when creating a new disk group, member disks should be in available state
+      - using r10 require at least 4 disks
+      - using r50 require at least 6 disks
+      - when creating a new disk group, member disks must be in available state
       - quote disk ids to ensure they're interpreted as strings
     required: True
     type: list
@@ -139,7 +141,7 @@ options:
 '''
 
 EXAMPLES = '''
-- name: add a linear disk group
+- name: add a linear raid10 disk group
   dell_me4_disk_group:
     username: manage
     password: !manage
@@ -264,17 +266,30 @@ def create_disk_group(session_key, module):
     if not module.params['disks']:
         module.fail_json(msg='cannot create disk group without disks')
 
+    spec_disks = module.params['disks']
     disks = get_disks(session_key, module)
     available_disks = [d.get('location') for d in disks if d.get('usage-numeric') == 0]
 
-    for disk in module.params['disks']:
+    for disk in spec_disks:
         if disk not in available_disks:
             module.fail_json(msg='disk {0} is not in available state, available disks: '.format(disk, ', '.format(available_disks)))
 
     base_url = 'https://{0}/api/add/disk-group/'.format(module.params['hostname'])
+    disks = ','.join(spec_disks)
+
+    if module.params['raid'].lower() in ['r10', 'r50']:
+        d_num = 2
+        if module.params['raid'].lower() in ['r50']:
+            d_num = 3
+        sub_groups = [','.join(spec_disks[i:i + d_num]) for i in range(0, len(spec_disks), d_num)]
+
+        if len(sub_groups) < 2:
+            module.fail_json(msg='{0} must contain at least {1} disks'.format(module.params['raid'], 2 * d_num))
+        disks = ':'.join(sub_groups)
+
     cmd = os.path.join(
         'type', module.params['storage_type'],
-        'disks', ','.join(module.params['disks']),
+        'disks', disks,
         'level', module.params['raid']
     )
 
