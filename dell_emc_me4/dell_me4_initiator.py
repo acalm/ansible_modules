@@ -122,7 +122,7 @@ def set_initiator(session_key, module):
         if any([c in nickname for c in illegal_chars]):
             module.fail_json(msg='nickname {0} contains illegal characters {1}'.format(nickname, illegal_chars))
         if len(nickname.encode('utf-8')) > 32:
-            module.fail_json('nickname {0} larger ({1}) than 32 bytes'.format(nickname, len(nickname.encode('utf-8'))))
+            module.fail_json(msg='nickname {0} larger ({1}) than 32 bytes'.format(nickname, len(nickname.encode('utf-8'))))
         cmd = os.path.join(cmd, 'nickname', nickname)
 
     url = 'https://{0}/api/{1}'.format(module.params['hostname'], cmd)

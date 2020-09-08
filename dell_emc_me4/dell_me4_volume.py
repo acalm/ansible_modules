@@ -278,7 +278,7 @@ def validate_params(module):
         module.fail_json(msg='volume size cannot exceed 140737488355328 bytes (128TiB)')
 
     if module.params['reserve_size'] and not size_rx.match(module.params['reserve_size']):
-        module.fail_json('invalid format for reserve_size: {0}, sizes should be suffixed numbers'.format(module.params['reserve_size']))
+        module.fail_json(msg='invalid format for reserve_size: {0}, sizes should be suffixed numbers'.format(module.params['reserve_size']))
 
 
 def create_volume(session_key, module):
@@ -288,14 +288,14 @@ def create_volume(session_key, module):
 
     pools = get_pools(session_key, module)
     if module.params['pool'] not in [p.get('name') for p in pools]:
-        module.fail_json('pool/disk group/vdisk {0} does not exist')
+        module.fail_json(msg='pool/disk group/vdisk {0} does not exist')
 
     pool = [p for p in pools if module.params['pool'] == p.get('name')][0]
     pool_avail_size = pool['blocksize'] * pool['total-avail-numeric']
     volume_size = suffixed_size_to_bytes(module.params['size'])
 
     if (volume_size > pool_avail_size) and pool['overcommit-numeric'] != 1:
-        module.fail_json('volume size larger ({0} bytes) than available in {1}: {2} bytes and pool does not support overcommit'.format(volume_size, pool['name'], pool_avail_size))
+        module.fail_json(msg='volume size larger ({0} bytes) than available in {1}: {2} bytes and pool does not support overcommit'.format(volume_size, pool['name'], pool_avail_size))
 
     cmd = os.path.join(
         'size', '{0}b'.format(volume_size),

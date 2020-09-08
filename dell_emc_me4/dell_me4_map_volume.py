@@ -184,7 +184,7 @@ def guess_lun(session_key, module):
             if lun_str.isdigit():
                 return int(lun_str)
             else:
-                module.fail_json('failed to guess lun, spcify lun manually')
+                module.fail_json(msg='failed to guess lun, spcify lun manually')
     return None
 
 
