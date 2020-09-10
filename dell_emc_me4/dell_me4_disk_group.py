@@ -42,7 +42,6 @@ options:
   name:
     description:
       - disk group name
-      - required
     required: True
     type: str
   raid:
@@ -75,7 +74,6 @@ options:
     description:
       - when C(state=absent) group will be deleted. I.E completely destroyed along with any data
       - when C(state=present) create/update a disk group
-      - removing a disk group can (and most probably will) take a _VERY_ long time
     type: str
   controller:
     choices:
