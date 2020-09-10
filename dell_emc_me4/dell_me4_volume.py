@@ -14,7 +14,7 @@ import time
 ANSIBLE_METADATA = {
     'metadata_version': '0.1',
     'status': ['preview'],
-    'supported_by': 'none'
+    'supported_by': 'community'
 }
 DOCUMENTATION = '''
 ---
