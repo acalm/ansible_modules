@@ -40,7 +40,7 @@ options:
       - mapping access permissions to use
       - volume cannot be mapped when C(no-access) is set
       - access permissions set here will affect all access,
-      - default sets C(read-write); access is for all initiators, use dell_me4_map_volume for initiator specific access
+      - default sets C(read-write) for _all_ initiators, use dell_me4_map_volume module for setting initiator specific access
     type: str
   name:
     description:
