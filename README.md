@@ -3,3 +3,4 @@ currently this collection only contain modules for the Dell EMC ME4 series stora
 
 ## Dependencies
 * requests
+* Python >= 3.6

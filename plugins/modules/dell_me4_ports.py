@@ -14,7 +14,7 @@ short_description: Manage ports in a Dell EMC me4 series SAN
 description:
   - Manage ports in Dell EMC PowerVault ME4xxx.
 requirements:
-  - python >= 2.7
+  - python >= 3.6
   - requests
 author:
   - Andreas Calminder (@acalm)
@@ -141,9 +141,9 @@ EXAMPLES = '''
 RETURN = '''#'''
 
 from ansible.module_utils.basic import AnsibleModule, missing_required_lib
-from ansible_collections.community.general.plugins.module_utils.compat import ipaddress
 import copy
 import hashlib
+import ipaddress
 import os
 
 try:
