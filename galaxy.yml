@@ -1,0 +1,12 @@
+namespace: "unknown"
+name: "storage"
+version: "1.0"
+readme: "README.md"
+authors:
+    - "Andreas Calminder <andreas.calminder@gmail.com>"
+license_file:
+    - LICENSE
+tags:
+    - dell_emc_me4
+    - storage
+repository: "https://github.com/acalm/unknown.storage"

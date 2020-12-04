@@ -1,3 +1,5 @@
-# assorted Ansible modules
-## dell_emc_me4
-some modules for managing the dell emc me4xxx series san, mostly iscsi related. all modules should™ have a documentation block, in some cases there's also an example.
+# unknown.storage Ansible collection
+currently this collection only contain modules for the Dell EMC ME4 series storage array(s)
+
+## Dependencies
+* requests
