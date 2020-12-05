@@ -86,7 +86,7 @@ options:
 
 EXAMPLES = '''
 - name: Map volumes to initiator
-  community.general.dell_me4_map_volume:
+  unknown.storage.dell_me4_map_volume:
     hostname: me4.fqdn
     username: manage
     password: "!manage"

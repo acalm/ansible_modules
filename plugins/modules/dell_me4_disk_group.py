@@ -143,7 +143,7 @@ options:
 EXAMPLES = '''
 ---
 - name: Add a linear raid10 disk group
-  community.general.dell_me4_disk_group:
+  unknown.storage.dell_me4_disk_group:
     username: manage
     password: "!manage"
     hostname: "{{ inventory_hostname }}"
@@ -160,7 +160,7 @@ EXAMPLES = '''
       - "0.5"
 
 - name: Add disk(s) to a linear disk group
-  community.general.dell_me4_disk_group:
+  unknown.storage.dell_me4_disk_group:
     username: manage
     password: "!manage"
     hostname: "{{ inventory_hostname }}"
@@ -173,7 +173,7 @@ EXAMPLES = '''
       - "0.9"
 
 - name: Remove disk group
-  community.general.dell_me4_disk_group:
+  unknown.storage.dell_me4_disk_group:
     username: manage
     password: "!manage"
     hostname: "{{ inventory_hostname }}"

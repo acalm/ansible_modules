@@ -111,7 +111,7 @@ options:
 EXAMPLES = '''
 - name: Configure me4 iscsi ports
   connection: local
-  community.general.dell_me4_ports:
+  unknown.storage.dell_me4_ports:
     hostname: "{{ inventory_hostname }}"
     username: manage
     password: "!manage"

@@ -47,7 +47,7 @@ EXAMPLES = '''
 ---
 - name: Collect me4 facts
   connection: local
-  community.general.dell_me4_info:
+  unknown.storage.dell_me4_info:
     hostname: me4.fqdn
     username: monitor
     password: "!monitor"

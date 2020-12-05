@@ -71,7 +71,7 @@ options:
 EXAMPLES = '''
 ---
 - name: Create initiator
-  community.general.dell_me4_initiator:
+  unknown.storage.dell_me4_initiator:
     hostname: me4.fqdn
     username: manage
     password: "!manage"
